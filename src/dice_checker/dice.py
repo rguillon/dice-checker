@@ -6,7 +6,7 @@ import operator
 import random
 import re
 from collections import defaultdict
-from typing import TYPE_CHECKING, override
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -175,7 +175,6 @@ class Dice:
         """
         return self._combine(other, operator.ge)
 
-    @override
     def __eq__(self, other: object) -> bool:
         """Override the equality operator to compare two Dice objects based on their distributions.
 
@@ -190,7 +189,6 @@ class Dice:
             return False
         return self.distribution == other.distribution
 
-    @override
     def __hash__(self) -> int:
         """Override the hash function to allow Dice objects to be used in sets and as dictionary keys.
 
@@ -200,7 +198,6 @@ class Dice:
         """
         return hash(frozenset(self.distribution.items()))
 
-    @override
     def __ne__(self, other: object) -> bool:
         """Override the inequality operator to compare two Dice objects based on their distributions.
 
