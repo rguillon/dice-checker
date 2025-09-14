@@ -3,6 +3,8 @@
 
 name: CI
 
+runs-on: self-hosted
+
 on:
   push:
     # Use ["main", "master"] for CI only on the default branch.
@@ -24,7 +26,7 @@ jobs:
         python-version: ["3.11", "3.12", "3.13"]
 
     # Linux only by default. Use ${{ matrix.os }} for other OSes.
-    runs-on: ${{ matrix.os }}
+    runs-on: [self-hosted, ${{ matrix.os }}]
 
     steps:
       # Generally following uv docs:
