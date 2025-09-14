@@ -23,7 +23,7 @@ lint:
 	@uv run deptry src
 
 test:
-	uv run pytest
+	@uv run python -m pytest -vv --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term --cov-report=html
 
 upgrade:
 	uv sync --upgrade --all-extras --dev
