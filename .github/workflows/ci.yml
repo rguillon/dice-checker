@@ -3,8 +3,6 @@
 
 name: CI
 
-runs-on: self-hosted
-
 on:
   push:
     # Use ["main", "master"] for CI only on the default branch.
