@@ -26,7 +26,7 @@ jobs:
         python-version: ["3.11", "3.12", "3.13"]
 
     # Linux only by default. Use ${{ matrix.os }} for other OSes.
-    runs-on: [self-hosted, ${{ matrix.os }}]
+    runs-on: [self-hosted, linux]
 
     steps:
       # Generally following uv docs:
