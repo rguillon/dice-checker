@@ -7,3 +7,14 @@
 [![License](https://img.shields.io/github/license/rguillon/dice-checker)](https://img.shields.io/github/license/rguillon/dice-checker)
 
 A simple library to compute probabilities with dice rolls.
+
+
+
+```python
+from dice-checker import Dice
+
+roll = Dice("2D6+1")
+
+print(roll.distribution)
+
+```
