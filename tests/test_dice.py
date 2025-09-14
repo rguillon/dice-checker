@@ -159,7 +159,7 @@ def test_eq_ne_operator(left: Dice, right: Dice | object, expected_equal: bool) 
 def test_roll_returns_possible_value() -> None:
     # Test for a standard die
     dice = Dice("1d6")
-    results = set()
+    results: set[float] = set()
     for _ in range(100):
         val = dice.roll()
         assert 1 <= val <= 6
@@ -170,7 +170,7 @@ def test_roll_returns_possible_value() -> None:
 
 def test_roll_distribution_matches_distribution_keys() -> None:
     # For a custom distribution
-    dist = {2: 0.2, 4: 0.3, 7: 0.5}
+    dist = {2.0: 0.2, 4.0: 0.3, 7.0: 0.5}
     dice = Dice(values=dist)
     for _ in range(20):
         assert dice.roll() in dist
@@ -188,7 +188,7 @@ def test_roll_with_negative_and_zero() -> None:
 
 def test_roll_with_complex_expression() -> None:
     dice = Dice("1d4+2")
-    results = set()
+    results: set[float] = set()
     for _ in range(100):
         val = dice.roll()
         assert 3 <= val <= 6

@@ -6,13 +6,21 @@
 
 .PHONY: default install lint test upgrade build clean agent-rules
 
-default: agent-rules install lint test 
+default: agent-rules install lint test
 
 install:
-	uv sync --all-extras
+	@uv sync --all-extras
+	@uv run pre-commit install
 
 lint:
-	uv run python devtools/lint.py
+	@echo "🚀 Checking lock file consistency with 'pyproject.toml'"
+	@uv lock --locked
+	@echo "🚀 Linting code: Running pre-commit"
+	@uv run pre-commit run -a
+	@echo "🚀 Static type checking: Running mypy"
+	@uv run mypy
+	@echo "🚀 Checking for obsolete dependencies: Running deptry"
+	@uv run deptry src
 
 test:
 	uv run pytest

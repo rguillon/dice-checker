@@ -6,7 +6,7 @@ Repository = "https://github.com/rguillon/dicer"
 # Documentation = "https://..."
 
 [project]
-name = "dicer"
+name = "dice-checker"
 description = "Simple dice manipulation library allowing to compute probabilities of complex dice rolls"
 authors = [
     { name="Renaud Guillon", email="renaud.guillon@gmail.com" },
@@ -58,10 +58,6 @@ dev = [
     "pytest-cov>=7.0.0",
 ]
 
-[project.scripts]
-# Add script entry points here:
-dicer = "dicer:main"
-
 
 # ---- Build system ----
 
@@ -85,59 +81,99 @@ bump = true
 
 [tool.hatch.build.targets.wheel]
 # The source location for the package.
-packages = ["src/dicer"]
+packages = ["src/dice_checker"]
 
 
 # ---- Settings ----
 
+[tool.mypy]
+files = ["src"]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+disallow_any_unimported = true
+incremental = false
+follow_untyped_imports = true
+follow_imports = "normal"
+ignore_errors = false
+ignore_missing_imports = false
+pretty = true
+show_error_context = true
+show_traceback = true
+show_error_codes = true
+strict_equality = true
+strict_optional = true
+warn_incomplete_stub = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+strict = true
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "[%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+
+
 [tool.ruff]
-# Set as desired, typically 88 (black standard) or 100 (wide).
-line-length = 100
+target-version = "py39"
+line-length = 120
+fix = true
+unsafe-fixes = true
+
 
 [tool.ruff.lint]
-select = [
-    # See: https://docs.astral.sh/ruff/rules/
-    # Basic list from: https://docs.astral.sh/ruff/linter/#rule-selection
-    "E", # https://docs.astral.sh/ruff/rules/#error-e
-    "F", # https://docs.astral.sh/ruff/rules/#pyflakes-f
-    "UP", # https://docs.astral.sh/ruff/rules/#pyupgrade-up
-    "B", # https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
-    "I", # https://docs.astral.sh/ruff/rules/#isort-i
-    # Other possibilities:
-    # "D" # https://docs.astral.sh/ruff/rules/#pydocstyle-d
-    # "Q" # https://docs.astral.sh/ruff/rules/#flake8-quotes-q
-    # "COM" # https://docs.astral.sh/ruff/rules/#flake8-commas-com
-    # "SIM", # https://docs.astral.sh/ruff/rules/#flake8-simplify-sim
+preview = true
+fixable = ["ALL"]
+select = ["ALL", "RUF022"]
+ignore = [  "COM812",   # cause incompatibility with the formatter
+            "ISC001",   # cause incompatibility with the formatter
+            "D203",     # conflict with another rule
+            "D213",     # conflict with another rule
+            "CPY001",   # No copyright
+            ]
 
-]
-ignore = [
-    # Disable some rules that are overly pedantic. Add/remove as desired:
-    "E501", # https://docs.astral.sh/ruff/rules/line-too-long/
-    "E402", # https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file/
-    "E731", # https://docs.astral.sh/ruff/rules/lambda-assignment/
-    # We use both ruff formatter and linter so some rules should always be disabled.
-    # See: https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
-    "W191", # https://docs.astral.sh/ruff/rules/tab-indentation/
-    "E111", # https://docs.astral.sh/ruff/rules/indentation-with-invalid-multiple/
-    "E114", # https://docs.astral.sh/ruff/rules/indentation-with-invalid-multiple-comment/
-    "E117", # https://docs.astral.sh/ruff/rules/over-indented/
-    "D206", # https://docs.astral.sh/ruff/rules/docstring-tab-indentation/
-    "D300", # https://docs.astral.sh/ruff/rules/triple-single-quotes/
-    "Q000", # https://docs.astral.sh/ruff/rules/bad-quotes-inline-string/
-    "Q001", # https://docs.astral.sh/ruff/rules/bad-quotes-multiline-string/
-    "Q002", # https://docs.astral.sh/ruff/rules/bad-quotes-docstring/
-    "Q003", # https://docs.astral.sh/ruff/rules/avoidable-escaped-quote/
-    "COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/
-    "COM819", # https://docs.astral.sh/ruff/rules/prohibited-trailing-comma/
-    "ISC002", # https://docs.astral.sh/ruff/rules/multi-line-implicit-string-concatenation/
-]
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [ "S101",     # Allow assert in tests
+              "D100",     # No docstring in tests
+              "D101",     # No docstring in tests
+              "D102",     # No docstring in tests
+              "D103",     # No docstring in tests
+              "D105",     # No docstring in tests
+              "D107",     # No docstring in tests
+              "FBT001",   # Boolean-typed positional argument in function
+              "PLR2004",  # Magic values ok in tests
+              ]
+
+
+[tool.ruff.format]
+preview = true
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
 
 [tool.basedpyright]
 # BasedPyright currently seems like the best type checker option, much faster
 # than mypy and with a good extension for VSCode/Cursor.
 # https://marketplace.visualstudio.com/items?itemName=detachhead.basedpyright
 # https://docs.basedpyright.com/latest/configuration/config-files/#sample-pyprojecttoml-file
-include = ["src", "tests", "devtools"]
+include = ["src"]
+exclude = ["tests"]
 # By default BasedPyright is very strict, so you almost certainly want to disable
 # some of the rules.
 # First, these turn off warnings about (yes) how you ignore warnings:
@@ -149,7 +185,7 @@ reportUnnecessaryTypeIgnoreComment = false
 reportMissingTypeStubs = false
 reportUnusedCallResult = false
 reportAny = false
-reportExplicitAny = false
+#reportExplicitAny = false
 reportImplicitStringConcatenation = false
 reportUnreachable = false
 # reportPrivateImportUsage = false
@@ -163,14 +199,3 @@ reportUnreachable = false
 # Add here as needed:
 # ignore-words-list = "foo,bar"
 # skip = "foo.py,bar.py"
-
-[tool.pytest.ini_options]
-python_files = ["*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-testpaths = [
-    "src",
-    "tests",
-]
-norecursedirs = []
-filterwarnings = []

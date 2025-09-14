@@ -6,7 +6,10 @@ import operator
 import random
 import re
 from collections import defaultdict
-from typing import Callable
+from typing import TYPE_CHECKING, override
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class Dice:
@@ -60,7 +63,7 @@ class Dice:
                 clean_term = term.lstrip("+-")
                 num, sides = clean_term.lower().split("d")
                 num = int(num) if num else 1
-                sides = dict.fromkeys(range(1, int(sides) + 1), 1)
+                sides = dict.fromkeys([float(x) for x in range(1, int(sides) + 1)], 1.0)
 
                 if sign == -1:
                     for _ in range(num):
@@ -172,6 +175,7 @@ class Dice:
         """
         return self._combine(other, operator.ge)
 
+    @override
     def __eq__(self, other: object) -> bool:
         """Override the equality operator to compare two Dice objects based on their distributions.
 
@@ -186,6 +190,7 @@ class Dice:
             return False
         return self.distribution == other.distribution
 
+    @override
     def __hash__(self) -> int:
         """Override the hash function to allow Dice objects to be used in sets and as dictionary keys.
 
@@ -195,6 +200,7 @@ class Dice:
         """
         return hash(frozenset(self.distribution.items()))
 
+    @override
     def __ne__(self, other: object) -> bool:
         """Override the inequality operator to compare two Dice objects based on their distributions.
 
@@ -237,7 +243,7 @@ class Dice:
 
         """
         total = self.space_size
-        return Dice(values={outcome: prob*value / total for outcome, prob in self.__distribution.items()})
+        return Dice(values={outcome: prob * value / total for outcome, prob in self.__distribution.items()})
 
     def roll(self) -> float | bool:
         """Simulate a roll of the dice based on its probability distribution.
@@ -247,5 +253,5 @@ class Dice:
          calculated 2
 
         """
-        values, weights = zip(*self.__distribution.items())
+        values, weights = zip(*self.__distribution.items(), strict=False)
         return float(sum(random.choices(values, weights=weights, k=1)))  # noqa: S311 it's good enough, it's not cryptography
