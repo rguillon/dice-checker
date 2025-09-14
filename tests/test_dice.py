@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from dice_checker.dice import Dice
+from dice_checker import Dice
 
 
 @pytest.mark.parametrize(

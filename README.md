@@ -11,7 +11,7 @@ A simple library to compute probabilities with dice rolls.
 
 
 ```python
-from dice-checker import Dice
+from dice_checker import Dice
 
 roll = Dice("2D6+1")
 
