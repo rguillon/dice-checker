@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from dice_checker import Dice
@@ -50,6 +52,7 @@ def test_dice_space_size(expression: str, expected_space_size: float) -> None:
         ("5d10", 27.5),
         ("2d4", 5),
         ("1d6 - 1d4", 1.0),
+        ("200D6", 700.0),
     ],
 )
 def test_dice_expected_value(expression: str, expected_value: float) -> None:
@@ -204,6 +207,5 @@ def test_hash() -> None:
 
 
 def test_to_image() -> None:
-    roll = Dice("6d6-6d6")
-
-    roll.to_image("6d6.png")
+    Dice("6d6-6d6").to_image("6d6.png")
+    Path("6d6.png").unlink()
