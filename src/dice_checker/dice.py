@@ -67,14 +67,16 @@ class Dice:
                 clean_term = term.lstrip("+-")
                 num, sides = clean_term.lower().split("d")
                 nb = int(num) if num else 1
-                values = dict.fromkeys([float(x) for x in range(1, int(sides) + 1)], 1.0)
+                new_dice = Dice()
+                for side in range(1, int(sides) + 1):
+                    new_dice.add_event(float(side), 1.0)
 
                 if sign == -1:
                     for _ in range(nb):
-                        dice -= Dice(values=values)
+                        dice -= new_dice
                 else:
                     for _ in range(nb):
-                        dice += Dice(values=values)
+                        dice += new_dice
 
             else:
                 dice += Dice(value=float(term))
