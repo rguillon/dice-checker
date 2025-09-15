@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import operator
 import random
 import re
@@ -282,6 +283,7 @@ class Dice:
         probabilities = [normalized_dice.distribution[o] for o in outcomes]
 
         plt.set_loglevel(level="warning")
+        logging.getLogger("PIL.PngImagePlugin").setLevel(logging.CRITICAL + 1)
         plt.figure(figsize=(8, 4))
         plt.bar(outcomes, probabilities, color="skyblue", edgecolor="black")
         plt.xlabel("Outcome")
