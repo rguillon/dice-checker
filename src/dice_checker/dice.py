@@ -281,6 +281,7 @@ class Dice:
         outcomes = list(normalized_dice.distribution.keys())
         probabilities = [normalized_dice.distribution[o] for o in outcomes]
 
+        plt.set_loglevel(level="warning")
         plt.figure(figsize=(8, 4))
         plt.bar(outcomes, probabilities, color="skyblue", edgecolor="black")
         plt.xlabel("Outcome")
