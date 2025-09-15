@@ -8,6 +8,8 @@ import re
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
+import matplotlib.pyplot as plt
+
 if TYPE_CHECKING:
     from collections.abc import Callable
 
@@ -252,3 +254,22 @@ class Dice:
         """
         values, weights = zip(*self.__distribution.items(), strict=False)
         return float(sum(random.choices(values, weights=weights, k=1)))  # noqa: S311 it's good enough, it's not cryptography
+
+    def to_image(self, filename: str = "dice_distribution.png") -> None:
+        """Generate a PNG image showing the distribution as a bar graph.
+
+        Args:
+            filename (str): The filename to save the PNG image to.
+
+        """
+        outcomes = list(self.__distribution.keys())
+        probabilities = [self.__distribution[o] / self.space_size for o in outcomes]
+
+        plt.figure(figsize=(8, 4))
+        plt.bar(outcomes, probabilities, color="skyblue", edgecolor="black")
+        plt.xlabel("Outcome")
+        plt.ylabel("Probability")
+        plt.title("Dice Distribution")
+        plt.tight_layout()
+        plt.savefig(filename)
+        plt.close()
