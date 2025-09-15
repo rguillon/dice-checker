@@ -16,11 +16,13 @@ lint:
 	@echo "🚀 Checking lock file consistency with 'pyproject.toml'"
 	@uv lock --locked
 	@echo "🚀 Linting code: Running pre-commit"
-	@uv run pre-commit run -a
-	@echo "🚀 Static type checking: Running mypy"
-	@uv run mypy
+	@uvx pre-commit run -a
+	# @echo "🚀 Static type checking: Running mypy"
+	# @uvx mypy
+	@echo "🚀 Static type checking: Running basedpyright"
+	@uvx basedpyright
 	@echo "🚀 Checking for obsolete dependencies: Running deptry"
-	@uv run deptry src
+	@uvx deptry src
 
 test:
 	@uv run python -m pytest -vv --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term --cov-report=html
