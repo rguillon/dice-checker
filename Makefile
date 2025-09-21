@@ -16,14 +16,19 @@ lint:
 	@echo "🚀 Checking lock file consistency with 'pyproject.toml'"
 	@uv lock --locked
 	@echo "🚀 Linting code: Running pre-commit"
-	@uv run pre-commit run -a
-	@echo "🚀 Static type checking: Running mypy"
-	@uv run mypy
+	@uvx pre-commit run -a
+	# @echo "🚀 Static type checking: Running mypy"
+	# @uvx mypy
+	@echo "🚀 Static type checking: Running basedpyright"
+	@uvx basedpyright
 	@echo "🚀 Checking for obsolete dependencies: Running deptry"
-	@uv run deptry src
+	@uvx deptry src
 
 test:
-	@uv run python -m pytest -vv --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term --cov-report=html
+	@uv run python -m pytest --mpl -vv --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term --cov-report=html
+
+generate_test_baselines:
+	@uv run python -m pytest --mpl-generate-path=tests/baseline
 
 upgrade:
 	uv sync --upgrade --all-extras --dev
@@ -33,19 +38,10 @@ build:
 
 agent-rules: CLAUDE.md AGENTS.md
 
-# Use .cursor/rules for sources of rules.
-# Create Claude and Codex rules from these.
-CLAUDE.md: .cursor/rules/general.mdc .cursor/rules/python.mdc
-	cat .cursor/rules/general.mdc .cursor/rules/python.mdc > CLAUDE.md
-
-AGENTS.md: .cursor/rules/general.mdc .cursor/rules/python.mdc
-	cat .cursor/rules/general.mdc .cursor/rules/python.mdc > AGENTS.md
-
 clean:
 	-rm -rf dist/
 	-rm -rf *.egg-info/
 	-rm -rf .pytest_cache/
 	-rm -rf .mypy_cache/
 	-rm -rf .venv/
-	-rm -rf CLAUDE.md AGENTS.md
 	-find . -type d -name "__pycache__" -exec rm -rf {} +

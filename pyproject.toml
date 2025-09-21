@@ -13,15 +13,13 @@ authors = [
 ]
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.11,<4.0"
+requires-python = ">=3.10,<4.0"
 dynamic = ["version"]
 
 # https://pypi.org/classifiers/
 # Adjust as needed:
 classifiers = [
-    # Adjust as needed:
-    "Development Status :: 4 - Beta",
-    # "Development Status :: 5 - Production/Stable",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
@@ -30,14 +28,13 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
-    # Include this to avoid accidentally publishing to PyPI:
-    # "Private :: Do Not Upload",
 ]
 
 
 # ---- Main dependencies ----
 
 dependencies = [
+    "matplotlib>=3.10.6",
 ]
 
 
@@ -50,12 +47,13 @@ dev = [
     "ruff>=0.11.9",
     "codespell>=2.4.1",
     "rich>=14.0.0",
-    "basedpyright>=1.29.1",
+    "basedpyright>=1.30.0",
     "funlog>=0.2.1",
     "pre-commit>=4.3.0",
     "deptry>=0.23.1",
     "mypy>=1.18.1",
     "pytest-cov>=7.0.0",
+    "pytest-mpl>=0.17.0",
 ]
 
 
@@ -170,28 +168,14 @@ source = ["src"]
 # than mypy and with a good extension for VSCode/Cursor.
 # https://marketplace.visualstudio.com/items?itemName=detachhead.basedpyright
 # https://docs.basedpyright.com/latest/configuration/config-files/#sample-pyprojecttoml-file
-include = ["src"]
+include = ["src/dice_checker"]
 exclude = ["tests"]
-# By default BasedPyright is very strict, so you almost certainly want to disable
-# some of the rules.
-# First, these turn off warnings about (yes) how you ignore warnings:
-reportIgnoreCommentWithoutRule = false
-reportUnnecessaryTypeIgnoreComment = false
-# A few typically noisy warnings are next.
-# How many you enable is up to you. The first few are off by default, but you can
-# comment/uncomment these as desired:
-reportMissingTypeStubs = false
+extraPaths = ["src"]
+typeCheckingMode = "all"
 reportUnusedCallResult = false
-reportAny = false
-#reportExplicitAny = false
-reportImplicitStringConcatenation = false
-reportUnreachable = false
-# reportPrivateImportUsage = false
-# reportPrivateLocalImportUsage = false
-# reportMissingImports = false
-# reportUnnecessaryIsInstance = false
-# reportUnknownVariableType = false
-# reportUnknownArgumentType = false
+reportUnknownMemberType = false
+reportImplicitOverride = false
+
 
 [tool.codespell]
 # Add here as needed:

@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
 from dice_checker import Dice
+
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
 
 
 @pytest.mark.parametrize(
@@ -50,6 +55,7 @@ def test_dice_space_size(expression: str, expected_space_size: float) -> None:
         ("5d10", 27.5),
         ("2d4", 5),
         ("1d6 - 1d4", 1.0),
+        ("200D6", 700.0),
     ],
 )
 def test_dice_expected_value(expression: str, expected_value: float) -> None:
@@ -198,4 +204,11 @@ def test_roll_with_complex_expression() -> None:
 
 def test_hash() -> None:
     # dumb test for coverage
-    assert hash(Dice("1d4+2")) == -2277558534742851117
+    dice1: Dice = Dice(desc="1d4+2")
+    dice2: Dice = Dice(desc="1d4") + Dice(desc="2")
+    assert hash(dice1) == hash(dice2)
+
+
+@pytest.mark.mpl_image_compare
+def test_to_image() -> Figure:
+    return Dice(desc="6d6").to_image(title="6d6 Distribution", xlabel="Sum of 6d6", ylabel="Probability (%)")
