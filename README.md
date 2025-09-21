@@ -112,7 +112,7 @@ Rolls implement a roll method that will returns random values according to their
 
 ```
 
-And finally, Rolls implement to_image method that returns a Matplotlib Figure that can be saved as an image
+And finally, Rolls implement to_figure method that returns a Matplotlib Figure that can be saved as an image
 
 ```python
 
