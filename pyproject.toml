@@ -54,6 +54,7 @@ dev = [
     "mypy>=1.18.1",
     "pytest-cov>=7.0.0",
     "pytest-mpl>=0.17.0",
+    "pytest-markdoctest>=0.1.0",
 ]
 
 
