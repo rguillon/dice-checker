@@ -1,3 +1,5 @@
+# Copyright (c) 2025 Renaud. Licensed under the MIT License.
+
 """Module for manipulating dices."""
 
 from __future__ import annotations
@@ -16,7 +18,7 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
 
-class Dice:
+class Roll:
     """Class representing a dice or a combination of dices."""
 
     def __init__(
@@ -26,10 +28,10 @@ class Dice:
         *,
         value: float | None = None,
     ) -> None:
-        """Initialize a Dice object.
+        """Initialize a Roll object.
 
         Args:
-            desc (str | None): A string description of the dice expression (e.g., "2d6+3").
+            desc (str | None): A string description of the roll expression (e.g., "2d6+3").
             values (dict[float, float] | None): A dictionary mapping outcomes to their probabilities.
             value (float | None): A fixed numeric value representing a certain outcome.
 
@@ -40,26 +42,26 @@ class Dice:
         elif value is not None:
             self.__distribution = {value: 1.0}
         elif desc is not None:
-            self.__distribution = Dice.parse_dice_expression(desc).distribution
+            self.__distribution = Roll.parse_dice_expression(desc).distribution
         else:
             self.__distribution = {}
 
     @staticmethod
-    def parse_dice_expression(expression: str) -> Dice:
-        """Parse a dice expression string and returns a Dice object representing the distribution.
+    def parse_dice_expression(expression: str) -> Roll:
+        """Parse a dice expression string and returns a Roll object representing the distribution.
 
         Args:
             expression (str): The dice expression string (e.g., "1d6-3").
 
         Returns:
-            Dice: A Dice object representing the parsed expression.
+            Roll: A Roll object representing the parsed expression.
 
         """
         term_pattern = re.compile(r"([+-]?\d*[dD]?\d*)")
         expression = expression.replace(" ", "")
         terms: list[str] = term_pattern.findall(expression)
 
-        dice: Dice = Dice(value=0)
+        dice: Roll = Roll(value=0)
 
         for term in terms:
             if not term:
@@ -69,7 +71,7 @@ class Dice:
                 clean_term = term.lstrip("+-")
                 num, sides = clean_term.lower().split("d")
                 nb = int(num) if num else 1
-                new_dice = Dice()
+                new_dice = Roll()
                 for side in range(1, int(sides) + 1):
                     new_dice.add_event(float(side), 1.0)
 
@@ -81,7 +83,7 @@ class Dice:
                         dice += new_dice
 
             else:
-                dice += Dice(value=float(term))
+                dice += Roll(value=float(term))
         return dice
 
     def add_event(self, event: float, probability: float) -> None:
@@ -107,129 +109,129 @@ class Dice:
         """
         return self.__distribution
 
-    def _combine(self, other: Dice, op: Callable[[float, float], float]) -> Dice:
-        """Combine two Dice objects using a specified binary operation.
+    def _combine(self, other: Roll, op: Callable[[float, float], float]) -> Roll:
+        """Combine two Roll objects using a specified binary operation.
 
         Args:
-            other (Dice): The other Dice object to combine with.
+            other (Roll): The other Roll object to combine with.
             op (Callable[[float, float], float]): A binary operation function (e.g., addition, subtraction).
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
-        result = Dice()
+        result = Roll()
         for event1, prob1 in self.distribution.items():
             for event2, prob2 in other.distribution.items():
                 result.add_event(float(op(event1, event2)), prob1 * prob2)
         return result
 
-    def __add__(self, other: Dice) -> Dice:
-        """Add two Dice objects together, combining their distributions.
+    def __add__(self, other: Roll) -> Roll:
+        """Add two Roll objects together, combining their distributions.
 
         Args:
-            other (Dice): The other Dice object to add.
+            other (Roll): The other Roll object to add.
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
         return self._combine(other, operator.add)
 
-    def __sub__(self, other: Dice) -> Dice:
-        """Subtract one Dice object from another, combining their distributions.
+    def __sub__(self, other: Roll) -> Roll:
+        """Subtract one Roll object from another, combining their distributions.
 
         Args:
-            other (Dice): The other Dice object to subsctract.
+            other (Roll): The other Roll object to subsctract.
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
         return self._combine(other, operator.sub)
 
-    def __lt__(self, other: Dice) -> Dice:
-        """Compare two Dice objects using the less-than operator, combining their distributions.
+    def __lt__(self, other: Roll) -> Roll:
+        """Compare two Roll objects using the less-than operator, combining their distributions.
 
         Args:
-            other (Dice): The other Dice object to compare.
+            other (Roll): The other Roll object to compare.
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
         return self._combine(other, operator.lt)
 
-    def __le__(self, other: Dice) -> Dice:
-        """Compare two Dice objects using the less-than-or-equal-to operator, combining their distributions.
+    def __le__(self, other: Roll) -> Roll:
+        """Compare two Roll objects using the less-than-or-equal-to operator, combining their distributions.
 
         Args:
-            other (Dice): The other Dice object to compare.
+            other (Roll): The other Roll object to compare.
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
         return self._combine(other, operator.le)
 
-    def __gt__(self, other: Dice) -> Dice:
-        """Compare two Dice objects using the greater-than operator, combining their distributions.
+    def __gt__(self, other: Roll) -> Roll:
+        """Compare two Roll objects using the greater-than operator, combining their distributions.
 
         Args:
-            other (Dice): The other Dice object to compare.
+            other (Roll): The other Roll object to compare.
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
         return self._combine(other, operator.gt)
 
-    def __ge__(self, other: Dice) -> Dice:
-        """Compare two Dice objects using the greater-than-or-equal-to operator, combining their distributions.
+    def __ge__(self, other: Roll) -> Roll:
+        """Compare two Roll objects using the greater-than-or-equal-to operator, combining their distributions.
 
         Args:
-            other (Dice): The other Dice object to compare.
+            other (Roll): The other Roll object to compare.
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
         return self._combine(other, operator.ge)
 
     def __eq__(self, other: object) -> bool:
-        """Override the equality operator to compare two Dice objects based on their distributions.
+        """Override the equality operator to compare two Roll objects based on their distributions.
 
         Args:
-            other (Dice): The other Dice object to compare.
+            other (Roll): The other Roll object to compare.
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
-        if not isinstance(other, Dice):
+        if not isinstance(other, Roll):
             return False
         return self.distribution == other.distribution
 
     def __hash__(self) -> int:
-        """Override the hash function to allow Dice objects to be used in sets and as dictionary keys.
+        """Override the hash function to allow Roll objects to be used in sets and as dictionary keys.
 
         Returns:
-            int: The hash value of the Dice object.
+            int: The hash value of the Roll object.
 
         """
         return hash(frozenset(self.distribution.items()))
 
     def __ne__(self, other: object) -> bool:
-        """Override the inequality operator to compare two Dice objects based on their distributions.
+        """Override the inequality operator to compare two Roll objects based on their distributions.
 
         Args:
-            other (Dice): The other Dice object to compare.
+            other (Roll): The other Roll object to compare.
 
         Returns:
-            Dice: A new Dice object representing the combined distribution.
+            Roll: A new Roll object representing the combined distribution.
 
         """
-        if not isinstance(other, Dice):
+        if not isinstance(other, Roll):
             return True
         return self.distribution != other.distribution
 
@@ -253,15 +255,15 @@ class Dice:
         """
         return sum(value * prob for value, prob in self.__distribution.items()) / self.space_size
 
-    def normalized(self, value: float = 1.0) -> Dice:
-        """Return a new Dice instance with its probability distribution normalized.
+    def normalized(self, value: float = 1.0) -> Roll:
+        """Return a new Roll instance with its probability distribution normalized.
 
         Returns:
-            Dice: A new Dice object with a normalized probability distribution.
+            Roll: A new Roll object with a normalized probability distribution.
 
         """
         total = self.space_size
-        return Dice(values={outcome: prob * value / total for outcome, prob in self.__distribution.items()})
+        return Roll(values={outcome: prob * value / total for outcome, prob in self.__distribution.items()})
 
     def roll(self) -> float:
         """Simulate a roll of the dice based on its probability distribution.
@@ -275,7 +277,7 @@ class Dice:
         return float(sum(random.choices(values, weights=weights, k=1)))
 
     def to_image(
-        self, title: str = "Dice Distribution", xlabel: str = "Outcome", ylabel: str = "Probability (%)"
+        self, title: str = "Roll Distribution", xlabel: str = "Outcome", ylabel: str = "Probability (%)"
     ) -> Figure:
         """Return a Matplotlib Figure object representing the dice distribution as a bar graph.
 
@@ -288,7 +290,7 @@ class Dice:
             Figure: A Matplotlib Figure object representing the bar graph.
 
         """
-        normalized_dice: Dice = self.normalized(value=100.0)
+        normalized_dice: Roll = self.normalized(value=100.0)
         outcomes: list[float] = list(normalized_dice.distribution.keys())
         probabilities: list[float] = [normalized_dice.distribution[o] for o in outcomes]
 
