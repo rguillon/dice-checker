@@ -27,8 +27,8 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      # Generally following uv docs:
-      # https://docs.astral.sh/uv/guides/integration/github/
+      - name: Ensure git is installed
+        run: sudo apt-get update && sudo apt-get install -y git
 
       - name: Checkout (official GitHub action)
         uses: actions/checkout@v4
