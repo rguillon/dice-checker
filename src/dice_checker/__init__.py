@@ -1,8 +1,10 @@
+# Copyright (c) 2025 Renaud. Licensed under the MIT License.
+
 """Dice manipulation library."""
 
 from __future__ import annotations
 
-__all__ = ["Dice"]
+__all__ = ["Roll"]
 
 
-from .dice import Dice
+from .roll import Roll

@@ -1,10 +1,12 @@
+# Copyright (c) 2025 Renaud. Licensed under the MIT License.
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from dice_checker import Dice
+from dice_checker import Roll
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
@@ -24,7 +26,7 @@ if TYPE_CHECKING:
     ],
 )
 def test_dice_constructor(expression: str, expected_distribution: dict[float, float]) -> None:
-    assert Dice(expression).distribution == expected_distribution
+    assert Roll(expression).distribution == expected_distribution
 
 
 @pytest.mark.parametrize(
@@ -41,7 +43,7 @@ def test_dice_constructor(expression: str, expected_distribution: dict[float, fl
     ],
 )
 def test_dice_space_size(expression: str, expected_space_size: float) -> None:
-    assert Dice(expression).space_size == expected_space_size
+    assert Roll(expression).space_size == expected_space_size
 
 
 @pytest.mark.parametrize(
@@ -59,7 +61,7 @@ def test_dice_space_size(expression: str, expected_space_size: float) -> None:
     ],
 )
 def test_dice_expected_value(expression: str, expected_value: float) -> None:
-    assert Dice(expression).expected_value == expected_value
+    assert Roll(expression).expected_value == expected_value
 
 
 @pytest.mark.parametrize(
@@ -73,7 +75,7 @@ def test_dice_expected_value(expression: str, expected_value: float) -> None:
     ],
 )
 def test_dice_normalize(expression: str, expected_distribution: dict[float, float]) -> None:
-    dice = Dice(expression)
+    dice = Roll(expression)
     normalized = dice.normalized()
     assert normalized.distribution == expected_distribution
     assert normalized.space_size == 1.0
@@ -93,7 +95,7 @@ def test_dice_normalize(expression: str, expected_distribution: dict[float, floa
     ],
 )
 def test_lt_operator(left: str, right: str, expected_distribution: dict[float, float]) -> None:
-    assert (Dice(left) < Dice(right)).distribution == expected_distribution
+    assert (Roll(left) < Roll(right)).distribution == expected_distribution
 
 
 @pytest.mark.parametrize(
@@ -109,7 +111,7 @@ def test_lt_operator(left: str, right: str, expected_distribution: dict[float, f
     ],
 )
 def test_le_operator(left: str, right: str, expected_distribution: dict[float, float]) -> None:
-    assert (Dice(left) <= Dice(right)).distribution == expected_distribution
+    assert (Roll(left) <= Roll(right)).distribution == expected_distribution
 
 
 @pytest.mark.parametrize(
@@ -125,7 +127,7 @@ def test_le_operator(left: str, right: str, expected_distribution: dict[float, f
     ],
 )
 def test_gt_operator(left: str, right: str, expected_distribution: dict[float, float]) -> None:
-    assert (Dice(left) > Dice(right)).distribution == expected_distribution
+    assert (Roll(left) > Roll(right)).distribution == expected_distribution
 
 
 @pytest.mark.parametrize(
@@ -141,30 +143,30 @@ def test_gt_operator(left: str, right: str, expected_distribution: dict[float, f
     ],
 )
 def test_ge_operator(left: str, right: str, expected_distribution: dict[float, float]) -> None:
-    assert (Dice(left) >= Dice(right)).distribution == expected_distribution
+    assert (Roll(left) >= Roll(right)).distribution == expected_distribution
 
 
 @pytest.mark.parametrize(
     ("left", "right", "expected_equal"),
     [
-        (Dice("1"), Dice("1"), True),
-        (Dice("D6"), Dice("D6"), True),
-        (Dice("2D6"), Dice("1D6+1D6"), True),
-        (Dice("2D6+1"), Dice("1D6+1+1D6"), True),
-        (Dice("D4"), Dice("D5"), False),
-        (Dice("D4"), "test", False),
-        (Dice("D4"), 4, False),
-        (Dice("D4"), False, False),
+        (Roll("1"), Roll("1"), True),
+        (Roll("D6"), Roll("D6"), True),
+        (Roll("2D6"), Roll("1D6+1D6"), True),
+        (Roll("2D6+1"), Roll("1D6+1+1D6"), True),
+        (Roll("D4"), Roll("D5"), False),
+        (Roll("D4"), "test", False),
+        (Roll("D4"), 4, False),
+        (Roll("D4"), False, False),
     ],
 )
-def test_eq_ne_operator(left: Dice, right: Dice | object, expected_equal: bool) -> None:
+def test_eq_ne_operator(left: Roll, right: Roll | object, expected_equal: bool) -> None:
     assert (left == right) == expected_equal
     assert (left != right) == (not expected_equal)
 
 
 def test_roll_returns_possible_value() -> None:
     # Test for a standard die
-    dice = Dice("1d6")
+    dice = Roll("1d6")
     results: set[float] = set()
     for _ in range(100):
         val = dice.roll()
@@ -177,23 +179,23 @@ def test_roll_returns_possible_value() -> None:
 def test_roll_distribution_matches_distribution_keys() -> None:
     # For a custom distribution
     dist = {2.0: 0.2, 4.0: 0.3, 7.0: 0.5}
-    dice = Dice(values=dist)
+    dice = Roll(values=dist)
     for _ in range(20):
         assert dice.roll() in dist
 
 
 def test_roll_with_negative_and_zero() -> None:
-    dice = Dice("-2")
+    dice = Roll("-2")
     for _ in range(5):
         assert dice.roll() == -2
 
-    dice = Dice("0")
+    dice = Roll("0")
     for _ in range(5):
         assert dice.roll() == 0
 
 
 def test_roll_with_complex_expression() -> None:
-    dice = Dice("1d4+2")
+    dice = Roll("1d4+2")
     results: set[float] = set()
     for _ in range(100):
         val = dice.roll()
@@ -204,11 +206,11 @@ def test_roll_with_complex_expression() -> None:
 
 def test_hash() -> None:
     # dumb test for coverage
-    dice1: Dice = Dice(desc="1d4+2")
-    dice2: Dice = Dice(desc="1d4") + Dice(desc="2")
+    dice1: Roll = Roll(desc="1d4+2")
+    dice2: Roll = Roll(desc="1d4") + Roll(desc="2")
     assert hash(dice1) == hash(dice2)
 
 
 @pytest.mark.mpl_image_compare
 def test_to_image() -> Figure:
-    return Dice(desc="6d6").to_image(title="6d6 Distribution", xlabel="Sum of 6d6", ylabel="Probability (%)")
+    return Roll(desc="6d6").to_figure(title="6d6 Distribution", xlabel="Sum of 6d6", ylabel="Probability (%)")
