@@ -276,7 +276,7 @@ class Roll:
         values, weights = zip(*self.__distribution.items(), strict=False)
         return float(sum(random.choices(values, weights=weights, k=1)))
 
-    def to_image(
+    def to_figure(
         self, title: str = "Roll Distribution", xlabel: str = "Outcome", ylabel: str = "Probability (%)"
     ) -> Figure:
         """Return a Matplotlib Figure object representing the dice distribution as a bar graph.

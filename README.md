@@ -118,7 +118,7 @@ And finally, Rolls implement to_image method that returns a Matplotlib Figure th
 
 ```python
 
->>> Roll("5D6").to_image().savefig("images/5D6.png")
+>>> Roll("5D6").to_figure().savefig("images/5D6.png")
 
 ```
 

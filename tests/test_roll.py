@@ -213,4 +213,4 @@ def test_hash() -> None:
 
 @pytest.mark.mpl_image_compare
 def test_to_image() -> Figure:
-    return Roll(desc="6d6").to_image(title="6d6 Distribution", xlabel="Sum of 6d6", ylabel="Probability (%)")
+    return Roll(desc="6d6").to_figure(title="6d6 Distribution", xlabel="Sum of 6d6", ylabel="Probability (%)")
