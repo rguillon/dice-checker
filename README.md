@@ -63,6 +63,25 @@ Dices have attributes:
 
 ```
 
+Dices have a normalize function that turns a new Dice with the probabilities scaled so their sum equals the requested value
+
+```python
+
+>>> roll = Dice("D10")
+>>> print(roll.distribution)
+{1.0: 1.0, 2.0: 1.0, 3.0: 1.0, 4.0: 1.0, 5.0: 1.0, 6.0: 1.0, 7.0: 1.0, 8.0: 1.0, 9.0: 1.0, 10.0: 1.0}
+
+# The sum of probabilities equals one.
+>>> print(roll.normalized().distribution)
+{1.0: 0.1, 2.0: 0.1, 3.0: 0.1, 4.0: 0.1, 5.0: 0.1, 6.0: 0.1, 7.0: 0.1, 8.0: 0.1, 9.0: 0.1, 10.0: 0.1}
+
+# To get probabilitied as percentages
+>>> print(roll.normalized(value=100).distribution)
+{1.0: 10.0, 2.0: 10.0, 3.0: 10.0, 4.0: 10.0, 5.0: 10.0, 6.0: 10.0, 7.0: 10.0, 8.0: 10.0, 9.0: 10.0, 10.0: 10.0}
+
+
+```
+
 Dices can be added and subtracted
 
 ```python
@@ -73,7 +92,7 @@ Dices can be added and subtracted
 
 ```
 
-And Dices implement comparison operators that will return the probability of the True/False events:
+Dices implement comparison operators that will return the probability of the True/False events:
 
 
 ```python
@@ -86,3 +105,21 @@ And Dices implement comparison operators that will return the probability of the
 {0.0: 721.0, 1.0: 575.0}
 
 ```
+
+Dices implement a roll method that will returns random values according to their probabilities
+
+```python
+
+>>> result = Dice("1D6").roll()
+
+```
+
+And finally, Dices implement to_image method that returns a Matplotlib Figure that can be saved as an image
+
+```python
+
+>>> Dice("5D6").to_image().savefig("images/5D6.png")
+
+```
+
+![5D6](images/5D6.png "5D6")
