@@ -1,8 +1,8 @@
 from __future__ import annotations
-
-from pathlib import Path
+from matplotlib.figure import Figure
 
 import pytest
+import matplotlib.pyplot as plt
 
 from dice_checker import Dice
 
@@ -201,11 +201,11 @@ def test_roll_with_complex_expression() -> None:
 
 def test_hash() -> None:
     # dumb test for coverage
-    dice1 = Dice("1d4+2")
-    dice2 = Dice("1d4") + Dice("2")
+    dice1: Dice = Dice(desc="1d4+2")
+    dice2: Dice = Dice(desc="1d4") + Dice(desc="2")
     assert hash(dice1) == hash(dice2)
 
 
-def test_to_image() -> None:
-    Dice("6d6-6d6").to_image("6d6.png")
-    Path("6d6.png").unlink()
+@pytest.mark.mpl_image_compare
+def test_to_image() -> Figure:
+    return Dice(desc="6d6").to_image(title="6d6 Distribution", xlabel="Sum of 6d6", ylabel="Probability (%)")
