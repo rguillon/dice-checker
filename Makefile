@@ -25,10 +25,10 @@ lint:
 	@uvx deptry src
 
 test:
-	@uv run python -m pytest --mpl -vv --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term --cov-report=html
+	@uv run pytest --mpl -vv --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term --cov-report=html
 
 generate_test_baselines:
-	@uv run python -m pytest --mpl-generate-path=tests/baseline
+	@uv run pytest --mpl-generate-path=tests/baseline
 
 upgrade:
 	uv sync --upgrade --all-extras --dev
@@ -36,7 +36,8 @@ upgrade:
 build:
 	uv build
 
-agent-rules: CLAUDE.md AGENTS.md
+check_readme:
+	@uv run python -m doctest -v README.md
 
 clean:
 	-rm -rf dist/
