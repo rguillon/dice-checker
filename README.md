@@ -46,7 +46,6 @@ dice = Dice()
 dice.add_event(event=1, probability=1)
 dice.add_event(event=2, probability=1)
 
-
 ```
 
 Dices have attributes:
