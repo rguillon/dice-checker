@@ -63,7 +63,7 @@ Dices have attributes:
 
 ```
 
-Dices have a normalize function that turns a new Dice with the probabilities scaled so their sum equals the requested value
+Dices have a `normalized` function that turns a new Dice with the probabilities scaled so their sum equals the requested value
 
 ```python
 
