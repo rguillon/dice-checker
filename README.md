@@ -26,8 +26,6 @@ Rolls can also be build from a custom map of value/probability
 
 ```python
 
-from dice_checker import Roll
-
 # Using a 6 faces dice where 1 to 4 gives 0 points, a 5 gives 1 point, a 6 gives 2 points
 dice = Roll({0:4, 1:1, 2:1})
 
@@ -48,7 +46,7 @@ dice.add_event(event=2, probability=1)
 
 ```
 
-Rolls have attributes:
+Rolls have two attributes:
 * `distribution` returns a map of value/chances.
 * `expected_value` returns the average value of the roll.
 
@@ -92,7 +90,7 @@ Rolls can be added and subtracted
 
 ```
 
-Rolls implement comparison operators that will return the probability of the True/False events:
+Rolls implement comparison operators that will return a new Roll containing the probability of the True/False events:
 
 
 ```python
@@ -101,8 +99,8 @@ Rolls implement comparison operators that will return the probability of the Tru
 >>> (Roll("1D10") >= Roll("1D6")).distribution
 {1.0: 45.0, 0.0: 15.0}
 
->>> (Roll("2D6") < Roll("2D6")).distribution
-{0.0: 721.0, 1.0: 575.0}
+>>> (Roll("1D10") < Roll("1D20")).expected_value
+0.725
 
 ```
 
@@ -114,7 +112,7 @@ Rolls implement a roll method that will returns random values according to their
 
 ```
 
-And finally, Rolls implement to_image method that returns a Matplotlib Figure that can be saved as an image
+And finally, Rolls implement to_figure method that returns a Matplotlib Figure that can be saved as an image
 
 ```python
 
