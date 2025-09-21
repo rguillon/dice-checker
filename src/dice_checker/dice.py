@@ -272,7 +272,7 @@ class Dice:
 
         """
         values, weights = zip(*self.__distribution.items(), strict=False)
-        return float(sum(random.choices(values, weights=weights, k=1)))  # noqa: S311 it's good enough, it's not cryptography
+        return float(sum(random.choices(values, weights=weights, k=1)))
 
     def to_image(
         self, title: str = "Dice Distribution", xlabel: str = "Outcome", ylabel: str = "Probability (%)"
