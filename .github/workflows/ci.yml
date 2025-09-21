@@ -56,6 +56,9 @@ jobs:
       - name: Run tests
         run: make test
 
+      - name: Check the README.md examples
+        run: make check_readme
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:

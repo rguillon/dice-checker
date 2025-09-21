@@ -36,7 +36,8 @@ upgrade:
 build:
 	uv build
 
-agent-rules: CLAUDE.md AGENTS.md
+check_readme:
+	@uv run python -m doctest -v README.md
 
 clean:
 	-rm -rf dist/
