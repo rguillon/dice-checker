@@ -9,10 +9,11 @@ import re
 from typing import TYPE_CHECKING
 
 import matplotlib.pyplot as plt
-import matplotlib
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+    from matplotlib.figure import Figure
 
 
 class Dice:
@@ -273,24 +274,27 @@ class Dice:
         values, weights = zip(*self.__distribution.items(), strict=False)
         return float(sum(random.choices(values, weights=weights, k=1)))  # noqa: S311 it's good enough, it's not cryptography
 
-    def to_image(self, title: str = "Dice Distribution", xlabel: str= "Outcome", ylabel: str = "Probability (%)") -> Figure:
-        """Generate a PNG image showing the distribution as a bar graph.
+    def to_image(
+        self, title: str = "Dice Distribution", xlabel: str = "Outcome", ylabel: str = "Probability (%)"
+    ) -> Figure:
+        """Return a Matplotlib Figure object representing the dice distribution as a bar graph.
 
         Args:
-            filename (str): The filename to save the PNG image to.
             title (str): The title of the graph.
             xlabel (str): The label for the x-axis.
             ylabel (str): The label for the y-axis.
 
+        Returns:
+            Figure: A Matplotlib Figure object representing the bar graph.
+
         """
-        matplotlib.use('Agg')
         normalized_dice: Dice = self.normalized(value=100.0)
         outcomes: list[float] = list(normalized_dice.distribution.keys())
         probabilities: list[float] = [normalized_dice.distribution[o] for o in outcomes]
 
         plt.set_loglevel(level="warning")
         logging.getLogger(name="PIL.PngImagePlugin").setLevel(level=logging.CRITICAL + 1)
-        figure   = plt.figure(figsize=(8, 4))
+        figure: Figure = plt.figure(figsize=(8, 4))
         plt.bar(x=outcomes, height=probabilities, color="skyblue", edgecolor="black")
         plt.xlabel(xlabel=xlabel)
         plt.ylabel(ylabel)

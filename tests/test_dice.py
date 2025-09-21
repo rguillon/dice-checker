@@ -1,10 +1,13 @@
 from __future__ import annotations
-from matplotlib.figure import Figure
+
+from typing import TYPE_CHECKING
 
 import pytest
-import matplotlib.pyplot as plt
 
 from dice_checker import Dice
+
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
 
 
 @pytest.mark.parametrize(
