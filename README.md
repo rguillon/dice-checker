@@ -35,6 +35,20 @@ dice = Dice({0:4, 1:1, 2:1})
 ```
 
 
+And Dices can be built on the fly
+
+```python
+
+from dice_checker import Dice
+
+dice = Dice()
+
+dice.add_event(event=1, probability=1)
+dice.add_event(event=2, probability=1)
+
+
+```
+
 Dices have attributes:
 * `distribution` returns a map of value/chances.
 * `expected_value` returns the average value of the roll.

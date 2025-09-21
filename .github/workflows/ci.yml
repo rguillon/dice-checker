@@ -47,8 +47,6 @@ jobs:
       - name: Check the README.md examples
         run: make check_readme
 
-
-
   tests:
     strategy:
       matrix:
