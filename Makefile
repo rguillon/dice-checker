@@ -25,7 +25,10 @@ lint:
 	@uvx deptry src
 
 test:
-	@uv run python -m pytest -vv --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term --cov-report=html
+	@uv run python -m pytest --mpl -vv --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term --cov-report=html
+
+generate_test_baselines:
+	@uv run python -m pytest --mpl-generate-path=tests/baseline
 
 upgrade:
 	uv sync --upgrade --all-extras --dev
